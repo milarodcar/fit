@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% if is_edit %}Edit Client{% else %}Add New Client{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h2>
+            <i class="bi bi-person-{{ 'gear' if is_edit else 'plus' }}"></i>
+            {% if is_edit %}Edit Client{% else %}Add New Client{% endif %}
+        </h2>
+
+        <form action="{{ '/clients/' ~ client.id ~ '/edit' if is_edit else '/clients/' }}" method="POST" class="mt-4">
+
+            <!-- Name -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="name" name="name" required
+                    value="{{ client.name if is_edit else '' }}">
+            </div>
+
+            <!-- Weight -->
+            <div class="mb-3">
+                <label for="weight" class="form-label">Weight (kg)</label>
+                <input type="number" step="0.1" class="form-control" id="weight" name="weight" required
+                    value="{{ client.weight if is_edit else '' }}">
+            </div>
+
+            <!-- Age -->
+            <div class="mb-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control" id="age" name="age" required
+                    value="{{ client.age if is_edit else '' }}">
+            </div>
+
+            <!-- Objectives -->
+            <div class="mb-3">
+                <label for="objectives" class="form-label">Objectives (comma separated)</label>
+                <input type="text" class="form-control" id="objectives" name="objectives" required
+                    value="{{ client.objectives if is_edit else '' }}">
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-3">
+                <label for="phone_number" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phone_number" name="phone_number" required
+                    value="{{ client.phone_number if is_edit else '' }}">
+            </div>
+
+            <!-- Training Type -->
+            <div class="mb-3">
+                <label for="training_type" class="form-label">Training Type</label>
+                <select class="form-select" id="training_type" name="training_type" required>
+                    <option value="">Select...</option>
+                    {% set options = ["personal_training", "group_classes", "online_coaching", "nutrition_plan",
+                    "combined"] %}
+                    {% for opt in options %}
+                    <option value="{{ opt }}" {% if is_edit and client.training_type==opt %}selected{% endif %}>
+                        {{ opt.replace("_", " ").title() }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Service -->
+            <div class="mb-3">
+                <label for="service" class="form-label">Service</label>
+                <select class="form-select" id="service" name="service" required>
+                    <option value="">Select...</option>
+                    {% set services = ["monthly_subscription", "single_session", "package_10", "package_20", "premium"]
+                    %}
+                    {% for serv in services %}
+                    <option value="{{ serv }}" {% if is_edit and client.service==serv %}selected{% endif %}>
+                        {{ serv.replace("_", " ").title() }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Observations -->
+            <div class="mb-3">
+                <label for="observations" class="form-label">Observations</label>
+                <textarea class="form-control" id="observations" name="observations" rows="3">{{
+                    client.observations if is_edit else '' }}</textarea>
+            </div>
+
+            <!-- Buttons -->
+            <button type="submit" class="btn btn-primary">
+                {% if is_edit %}Update Client{% else %}Save Client{% endif %}
+            </button>
+            <a href="/clients" class="btn btn-outline-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</body>
+
+</html>
